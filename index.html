@@ -1,13 +1,204 @@
 <!DOCTYPE html>
-<div id="container"></div>
-<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-<script type="module">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello d3</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #ffffff;
+    }
+  </style>
+</head>
 
-<script>
-  console.log(d3); // test if d3 is loaded
-  // Add an SVG
-  // Add Rectangles
-  // Add Circles
-  // Add Lines
-  // Add Polygons
-</script>
+<body>
+  <div id="container"></div>
+
+  <!-- Load d3 -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+  <script>
+    console.log(d3); // d3 loads on chrome
+
+    const width = 600;
+    const height = 400;
+
+    //  SVG
+    const svg = d3
+      .select("#container")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .style("background", "white");
+
+
+
+// Postcard Base
+const postcardX = 40;
+const postcardY = 40;
+const postcardWidth = 320;
+const postcardHeight = 200;
+
+// Outside border
+svg.append("rect")
+  .attr("x", postcardX)
+  .attr("y", postcardY)
+  .attr("width", postcardWidth)
+  .attr("height", postcardHeight)
+  .attr("rx", 12)
+  .attr("ry", 12)
+  .attr("fill", "#fff8ef")
+  .attr("stroke", "#d4bfa3")
+  .attr("stroke-width", 3);
+
+// Inside border
+svg.append("rect")
+  .attr("x", postcardX + 12)
+  .attr("y", postcardY + 12)
+  .attr("width", postcardWidth - 24)
+  .attr("height", postcardHeight - 24)
+  .attr("fill", "none")
+  .attr("stroke", "#e2c9a8")
+  .attr("stroke-dasharray", "6,4");
+
+// Half line 
+
+svg.append("line")
+  .attr("x1", postcardX + postcardWidth / 2)
+  .attr("y1", postcardY + 20)
+  .attr("x2", postcardX + postcardWidth / 2)
+  .attr("y2", postcardY + postcardHeight - 20)
+  .attr("stroke", "#c2b59b")
+  .attr("stroke-width", 2);
+
+// Address lines
+for (let i = 0; i < 4; i++) {
+  svg.append("line")
+    .attr("x1", postcardX + postcardWidth / 2 + 20)
+    .attr("y1", postcardY + 60 + i * 25)
+    .attr("x2", postcardX + postcardWidth - 30)
+    .attr("y2", postcardY + 60 + i * 25)
+    .attr("stroke", "#9e9e9e")
+    .attr("stroke-width", 1.5);
+}
+
+// Stamp
+svg.append("rect")
+  .attr("x", postcardX + postcardWidth - 66)
+  .attr("y", postcardY + 25)
+  .attr("width", 40)
+  .attr("height", 40)
+  .attr("fill", "#c44d58")
+  .attr("stroke", "#8c2f39")
+  .attr("stroke-width", 2);
+
+// Dots on top and bottom
+for (let i = 0; i < 8; i++) {
+  svg.append("circle")
+    .attr("cx", postcardX + postcardWidth - 70 + i * 6 + 3)
+    .attr("cy", postcardY + 23)
+    .attr("r", 1.5)
+    .attr("fill", "#8c2f39");
+
+  svg.append("circle")
+    .attr("cx", postcardX + postcardWidth - 70 + i * 6 + 3)
+    .attr("cy", postcardY + 67)
+    .attr("r", 1.5)
+    .attr("fill", "#8c2f39");
+}
+
+
+    // Circles
+  
+    svg.append("circle")
+      .attr("cx", 500)
+      .attr("cy", 90)
+      .attr("r", 40)
+      .attr("fill", "tomato");
+
+    // Lines
+
+    svg.append("line")
+      .attr("x1", 50)
+      .attr("y1", 400)
+      .attr("x2", 350)
+      .attr("y2", 400)
+      .attr("stroke", "green")
+      .attr("stroke-width", 4);
+
+    
+ // Polygon (triangle)
+
+// Cheese base 
+const cheesePoints = "450,250 520,350 380,350";
+
+svg.append("polygon")
+  .attr("points", cheesePoints)
+  .attr("fill", "#f4c430")
+  .attr("stroke", "#d4a017")
+  .attr("stroke-width", 3);
+
+// Cheese rind 
+svg.append("polyline")
+  .attr("points", "450,250 520,350")
+  .attr("fill", "none")
+  .attr("stroke", "#c9a227")
+  .attr("stroke-width", 6)
+  .attr("stroke-linecap", "round");
+
+svg.append("polyline")
+  .attr("points", "450,250 380,350")
+  .attr("fill", "none")
+  .attr("stroke", "#c9a227")
+  .attr("stroke-width", 6)
+  .attr("stroke-linecap", "round");
+
+// Cheese holes
+const holes = [
+  { cx: 450, cy: 305, r: 10 },
+  { cx: 425, cy: 330, r: 6 },
+  { cx: 480, cy: 330, r: 8 }
+];
+
+svg.selectAll(".cheese-hole")
+  .data(holes)
+  .enter()
+  .append("circle")
+  .attr("class", "cheese-hole")
+  .attr("cx", d => d.cx)
+  .attr("cy", d => d.cy)
+  .attr("r", d => d.r)
+  .attr("fill", "#f9e27d")
+  .attr("stroke", "#e0c15a")
+  .attr("stroke-width", 1);
+
+// Highlight (shine)
+svg.append("path")
+  .attr("d", `
+    M 445 275
+    Q 460 290 470 315
+  `)
+  .attr("fill", "none")
+  .attr("stroke", "rgba(255,255,255,0.6)")
+  .attr("stroke-width", 4)
+  .attr("stroke-linecap", "round");
+
+// Crumb dots on da cheese
+const crumbs = d3.range(12).map(() => ({
+  cx: 410 + Math.random() * 80,
+  cy: 290 + Math.random() * 50
+}));
+
+svg.selectAll(".crumb")
+  .data(crumbs)
+  .enter()
+  .append("circle")
+  .attr("class", "crumb")
+  .attr("cx", d => d.cx)
+  .attr("cy", d => d.cy)
+  .attr("r", 1.5)
+  .attr("fill", "#d4a017");
+
+  </script>
+</body>
+</html>
