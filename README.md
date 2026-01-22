@@ -15,9 +15,11 @@ For the second item, I created a piece of cheese. For the base I used a yellow t
 
 
 **Technical Achievements**
+
 I added a hover feature on the cheese. When you hover, the 'rind' disappears- kind of like if you ate the cheese rind. 
 
 **Design Achievements**
+
 I created concepts out of the shapes which were the postcard and the cheese. 
 
 **Sources**
