@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Hello d3</title>
+  <title>D3 Skyler Lin</title>
   <style>
     body {
       font-family: sans-serif;
@@ -34,7 +34,7 @@
 
 
 
-// Postcard Base
+// Postcard rectangle
 const postcardX = 40;
 const postcardY = 40;
 const postcardWidth = 320;
@@ -63,7 +63,6 @@ svg.append("rect")
   .attr("stroke-dasharray", "6,4");
 
 // Half line 
-
 svg.append("line")
   .attr("x1", postcardX + postcardWidth / 2)
   .attr("y1", postcardY + 20)
@@ -93,7 +92,7 @@ svg.append("rect")
   .attr("stroke", "#8c2f39")
   .attr("stroke-width", 2);
 
-// Dots on top and bottom
+// Dots on the stamp
 for (let i = 0; i < 8; i++) {
   svg.append("circle")
     .attr("cx", postcardX + postcardWidth - 70 + i * 6 + 3)
@@ -109,59 +108,71 @@ for (let i = 0; i < 8; i++) {
 }
 
 
-    // Circles
-  
-    svg.append("circle")
-      .attr("cx", 500)
-      .attr("cy", 90)
-      .attr("r", 40)
-      .attr("fill", "tomato");
-
-    // Lines
-
-    svg.append("line")
-      .attr("x1", 50)
-      .attr("y1", 400)
-      .attr("x2", 350)
-      .attr("y2", 400)
-      .attr("stroke", "green")
-      .attr("stroke-width", 4);
 
     
- // Polygon (triangle)
+// Polygon (triangle)
 
 // Cheese base 
+
+// Polygon (triangle)
 const cheesePoints = "450,250 520,350 380,350";
 
-svg.append("polygon")
+const defs = svg.append("defs");
+
+const biteClip = defs.append("clipPath")
+  .attr("id", "cheese-clip");
+
+// Base cheese shape
+biteClip.append("polygon")
+  .attr("points", cheesePoints);
+
+// Bite (circle cut-out)
+biteClip.append("circle")
+  .attr("cx", 500)
+  .attr("cy", 315)
+  .attr("r", 22);
+
+const cheeseGroup = svg.append("g")
+  .attr("class", "cheese")
+  .style("cursor", "pointer")
+  .on("mouseenter", function () {
+    d3.select(this)
+      .attr("clip-path", "url(#cheese-clip)");
+  })
+  .on("mouseleave", function () {
+    d3.select(this)
+      .attr("clip-path", null);
+  });
+
+cheeseGroup.append("polygon")
   .attr("points", cheesePoints)
   .attr("fill", "#f4c430")
   .attr("stroke", "#d4a017")
   .attr("stroke-width", 3);
 
-// Cheese rind 
-svg.append("polyline")
+// cheese rind
+cheeseGroup.append("polyline")
   .attr("points", "450,250 520,350")
   .attr("fill", "none")
   .attr("stroke", "#c9a227")
   .attr("stroke-width", 6)
   .attr("stroke-linecap", "round");
 
-svg.append("polyline")
+cheeseGroup.append("polyline")
   .attr("points", "450,250 380,350")
   .attr("fill", "none")
   .attr("stroke", "#c9a227")
   .attr("stroke-width", 6)
   .attr("stroke-linecap", "round");
 
-// Cheese holes
+// cheese holes
 const holes = [
   { cx: 450, cy: 305, r: 10 },
   { cx: 425, cy: 330, r: 6 },
   { cx: 480, cy: 330, r: 8 }
 ];
 
-svg.selectAll(".cheese-hole")
+cheeseGroup.selectAll(".cheese-hole")
   .data(holes)
   .enter()
   .append("circle")
@@ -173,8 +184,8 @@ svg.selectAll(".cheese-hole")
   .attr("stroke", "#e0c15a")
   .attr("stroke-width", 1);
 
-// Highlight (shine)
-svg.append("path")
+// highltgher 
+cheeseGroup.append("path")
   .attr("d", `
     M 445 275
     Q 460 290 470 315
@@ -184,21 +195,9 @@ svg.append("path")
   .attr("stroke-width", 4)
   .attr("stroke-linecap", "round");
 
-// Crumb dots on da cheese
-const crumbs = d3.range(12).map(() => ({
-  cx: 410 + Math.random() * 80,
-  cy: 290 + Math.random() * 50
-}));
 
-svg.selectAll(".crumb")
-  .data(crumbs)
-  .enter()
-  .append("circle")
-  .attr("class", "crumb")
-  .attr("cx", d => d.cx)
-  .attr("cy", d => d.cy)
-  .attr("r", 1.5)
-  .attr("fill", "#d4a017");
+
+
 
   </script>
 </body>
